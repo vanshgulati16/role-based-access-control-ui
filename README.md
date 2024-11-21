@@ -1,36 +1,148 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Role-Based Access Control Dashboard
+
+A modern, responsive dashboard for managing user roles and permissions built with Next.js 14, Tailwind CSS, and Shadcn UI components.
+
+![Dashboard Preview](./public/dashboard.png)
+
+## Features
+
+### User Management
+- Create, edit, and delete user accounts
+- Assign roles to users
+- Track user status (Active/Inactive)
+- Responsive user table with sorting and filtering
+
+### Role Management
+- Create and customize roles with specific permissions
+- Hierarchical permission structure
+- Pre-configured role templates
+- Granular access control settings
+
+### Modern UI/UX
+- Clean, intuitive interface
+- Responsive design for all devices
+- Smooth animations and transitions
+
+## Tech Stack
+
+- **Framework**: Next.js 14
+- **Styling**: Tailwind CSS
+- **UI Components**: Shadcn UI
+- **Animations**: Framer Motion
+- **Icons**: Lucide Icons
+- **State Management**: React Hooks
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/role-based-access-control-ui.git
+cd role-based-access-control-ui
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Start the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```
+├── app/                  # Next.js app directory
+├── components/          # React components
+│   ├── ui/             # Shadcn UI components
+│   ├── Dashboard.jsx   # Main dashboard component
+│   ├── Navbar.jsx      # Navigation component
+│   ├── UserModal.jsx   # User management modal
+│   └── RoleModal.jsx   # Role management modal
+├── lib/                # Utility functions
+└── public/             # Static assets
+```
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Role Types
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Super Admin**
+   - Full system access
+   - User and role management
+   - System settings control
 
-## Deploy on Vercel
+2. **Content Manager**
+   - Content creation and management
+   - User activity monitoring
+   - Analytics access
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. **Editor**
+   - Content creation and editing
+   - Basic analytics access
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+4. **Viewer**
+   - Read-only access
+   - Basic analytics viewing
+
+## Permission Categories
+
+### User Management
+- Manage Users
+- Manage Roles
+
+### Content Management
+- Create Content
+- Edit Content
+- Delete Content
+- Approve Content
+- View Content
+
+### Analytics & Settings
+- View Analytics
+- Manage Settings
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Shadcn UI](https://ui.shadcn.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide Icons](https://lucide.dev/)
+
+## Contact
+
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+
+Project Link: [https://github.com/yourusername/role-based-access-control-ui](https://github.com/yourusername/role-based-access-control-ui)
