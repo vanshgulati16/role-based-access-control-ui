@@ -82,7 +82,6 @@ yarn dev
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm start` - Start production server
-- `npm run lint` - Run ESLint
 
 ## Role Types
 
@@ -141,8 +140,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 - [Framer Motion](https://www.framer.com/motion/)
 - [Lucide Icons](https://lucide.dev/)
 
-## Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-
-Project Link: [https://github.com/yourusername/role-based-access-control-ui](https://github.com/yourusername/role-based-access-control-ui)

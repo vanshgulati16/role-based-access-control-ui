@@ -23,6 +23,14 @@ import UserModal from './UserModal';
 import RoleModal from './RoleModal';
 import { motion } from 'framer-motion';
 import { useToast } from "@/hooks/use-toast"
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox"
 
 // Mock data structures
 const initialUsers = [
@@ -106,6 +114,8 @@ const Dashboard = () => {
   const [users, setUsers] = useState(initialUsers);
   const [roles, setRoles] = useState(initialRoles);
   const [selectedRole, setSelectedRole] = useState(null);
+  const [statusFilter, setSortOrder] = useState('all');
+  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   // User Management Functions
   const handleAddUser = (newUser) => {
@@ -243,6 +253,23 @@ const Dashboard = () => {
     );
   };
 
+  const formatPermissionName = (permission) => {
+    return permission
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
+  const filterRolesByPermissions = (role) => {
+    if (!Array.isArray(selectedPermissions) || selectedPermissions.length === 0) {
+      return true;
+    }
+    
+    return selectedPermissions.every(permission => 
+      role.permissions.includes(permission)
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto p-6 space-y-8">
@@ -322,7 +349,15 @@ const Dashboard = () => {
               <Card className="bg-white overflow-hidden">
                 <CardHeader className="border-b bg-white/50 backdrop-blur-sm">
                   <div className="flex justify-between items-center">
-                    <CardTitle>User Management</CardTitle>
+                    <div>
+                      <CardTitle>User Management</CardTitle>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {statusFilter === 'all' 
+                          ? `Showing all ${users.length} users`
+                          : `Showing ${users.filter(user => user.status === statusFilter).length} ${statusFilter} users`
+                        }
+                      </p>
+                    </div>
                     <UserModal 
                       onSubmit={handleAddUser} 
                       roles={roles}
@@ -342,7 +377,24 @@ const Dashboard = () => {
                           <TableHead className="pl-6">Name</TableHead>
                           <TableHead>Email</TableHead>
                           <TableHead>Role</TableHead>
-                          <TableHead>Status</TableHead>
+                          <TableHead>
+                            <div className="flex items-center gap-2">
+                              Status
+                              <Select
+                                value={statusFilter}
+                                onValueChange={setSortOrder}
+                              >
+                                <SelectTrigger className="w-[130px] h-8">
+                                  <SelectValue placeholder="Filter Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">All Users</SelectItem>
+                                  <SelectItem value="Active">Active</SelectItem>
+                                  <SelectItem value="Inactive">Inactive</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableHead>
                           <TableHead className="pr-6">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -350,44 +402,46 @@ const Dashboard = () => {
                         {users.length === 0 ? (
                           <EmptyState message="No users found. Add a new user to get started." />
                         ) : (
-                          users.map((user) => (
-                            <TableRow key={user.id} className="hover:bg-gray-50">
-                              <TableCell className="pl-6 font-medium">{user.name}</TableCell>
-                              <TableCell>{user.email}</TableCell>
-                              <TableCell>
-                                <Badge variant="secondary">{user.role}</Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant={user.status === 'Active' ? 'success' : 'destructive'}
-                                  className={user.status === 'Active' ? 'bg-green-600 hover:bg-green-500 text-white' : ''}
-                                >
-                                  {user.status}
-                                </Badge>
-                              </TableCell>
-                              <TableCell className="pr-6">
-                                <div className="flex space-x-2">
-                                  <UserModal 
-                                    user={user}
-                                    onSubmit={handleEditUser}
-                                    roles={roles}
-                                    triggerButton={
-                                      <Button size="icon" variant="outline">
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                    }
-                                  />
-                                  <Button 
-                                    size="icon" 
-                                    variant="destructive"
-                                    onClick={() => handleDeleteUser(user.id)}
+                          users
+                            .filter(user => statusFilter === 'all' || user.status === statusFilter)
+                            .map((user) => (
+                              <TableRow key={user.id} className="hover:bg-gray-50">
+                                <TableCell className="pl-6 font-medium">{user.name}</TableCell>
+                                <TableCell>{user.email}</TableCell>
+                                <TableCell>
+                                  <Badge variant="secondary">{user.role}</Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge 
+                                    variant={user.status === 'Active' ? 'success' : 'destructive'}
+                                    className={user.status === 'Active' ? 'bg-green-600 hover:bg-green-500 text-white' : ''}
                                   >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))
+                                    {user.status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="pr-6">
+                                  <div className="flex space-x-2">
+                                    <UserModal 
+                                      user={user}
+                                      onSubmit={handleEditUser}
+                                      roles={roles}
+                                      triggerButton={
+                                        <Button size="icon" variant="outline">
+                                          <Edit className="h-4 w-4" />
+                                        </Button>
+                                      }
+                                    />
+                                    <Button 
+                                      size="icon" 
+                                      variant="destructive"
+                                      onClick={() => handleDeleteUser(user.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
                         )}
                       </TableBody>
                     </Table>
@@ -406,9 +460,18 @@ const Dashboard = () => {
               <Card className="bg-white overflow-hidden">
                 <CardHeader className="border-b bg-white/50 backdrop-blur-sm">
                   <div className="flex justify-between items-center">
-                    <CardTitle>Role Management</CardTitle>
+                    <div>
+                      <CardTitle>Role Management</CardTitle>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {selectedPermissions.length === 0 
+                          ? `Showing all ${roles.length} roles`
+                          : `Showing ${roles.filter(role => 
+                              selectedPermissions.every(p => role.permissions.includes(p))
+                            ).length} roles with selected permissions`
+                        }
+                      </p>
+                    </div>
                     <RoleModal 
-                      role={selectedRole} 
                       onSubmit={handleRoleSubmit}
                       permissions={permissionsList}
                       triggerButton={
@@ -425,7 +488,64 @@ const Dashboard = () => {
                       <TableHeader>
                         <TableRow className="hover:bg-gray-50">
                           <TableHead className="pl-6">Role Name</TableHead>
-                          <TableHead>Permissions</TableHead>
+                          <TableHead>
+                            <div className="flex items-center gap-2">
+                              Permissions
+                              <Select>
+                                <SelectTrigger className="w-[280px] h-8">
+                                  <SelectValue placeholder="Filter by Permissions">
+                                    {selectedPermissions.length > 0 
+                                      ? `${selectedPermissions.length} permission${selectedPermissions.length > 1 ? 's' : ''} selected`
+                                      : "All Permissions"
+                                    }
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="max-h-[300px]">
+                                  <div className="space-y-2 p-2">
+                                    {permissionsList.map((permission) => (
+                                      <div
+                                        key={permission}
+                                        className="flex items-center space-x-2"
+                                      >
+                                        <Checkbox
+                                          id={permission}
+                                          checked={selectedPermissions.includes(permission)}
+                                          onCheckedChange={(checked) => {
+                                            setSelectedPermissions(prev => {
+                                              if (checked) {
+                                                return [...prev, permission];
+                                              } else {
+                                                return prev.filter(p => p !== permission);
+                                              }
+                                            });
+                                          }}
+                                        />
+                                        <label
+                                          htmlFor={permission}
+                                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                        >
+                                          {formatPermissionName(permission)}
+                                        </label>
+                                      </div>
+                                    ))}
+                                    {selectedPermissions.length > 0 && (
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setSelectedPermissions([]);
+                                        }}
+                                        className="w-full mt-4"
+                                      >
+                                        Clear All
+                                      </Button>
+                                    )}
+                                  </div>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </TableHead>
                           <TableHead className="pr-6">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -433,41 +553,48 @@ const Dashboard = () => {
                         {roles.length === 0 ? (
                           <EmptyState message="No roles found. Add a new role to get started." />
                         ) : (
-                          roles.map((role) => (
-                            <TableRow key={role.id} className="hover:bg-gray-50">
-                              <TableCell className="pl-6 font-medium">{role.name}</TableCell>
-                              <TableCell>
-                                <div className="flex flex-wrap gap-3 py-2">
-                                  {role.permissions.map((perm) => (
-                                    <Badge key={perm} variant="secondary">
-                                      {perm}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </TableCell>
-                              <TableCell className="pr-6">
-                                <div className="flex space-x-2">
-                                  <RoleModal 
-                                    role={role}
-                                    onSubmit={handleRoleSubmit}
-                                    permissions={permissionsList}
-                                    triggerButton={
-                                      <Button size="icon" variant="outline">
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                    }
-                                  />
-                                  <Button 
-                                    size="icon" 
-                                    variant="destructive"
-                                    onClick={() => handleDeleteRole(role.id)}
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))
+                          roles
+                            .filter(filterRolesByPermissions)
+                            .map((role) => (
+                              <TableRow key={role.id} className="hover:bg-gray-50">
+                                <TableCell className="pl-6 font-medium">{role.name}</TableCell>
+                                <TableCell>
+                                  <div className="flex flex-wrap gap-3 py-2">
+                                    {role.permissions.map((perm) => (
+                                      <Badge 
+                                        key={perm} 
+                                        variant="secondary"
+                                        className={selectedPermissions.includes(perm) ? 
+                                          "bg-purple-100 text-purple-800 border-purple-200" : ""}
+                                      >
+                                        {formatPermissionName(perm)}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="pr-6">
+                                  <div className="flex space-x-2">
+                                    <RoleModal 
+                                      role={role}
+                                      onSubmit={handleRoleSubmit}
+                                      permissions={permissionsList}
+                                      triggerButton={
+                                        <Button size="icon" variant="outline">
+                                          <Edit className="h-4 w-4" />
+                                        </Button>
+                                      }
+                                    />
+                                    <Button 
+                                      size="icon" 
+                                      variant="destructive"
+                                      onClick={() => handleDeleteRole(role.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))
                         )}
                       </TableBody>
                     </Table>
