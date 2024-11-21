@@ -2,7 +2,7 @@
 
 A modern, responsive dashboard for managing user roles and permissions built with Next.js 14, Tailwind CSS, and Shadcn UI components.
 
-![Dashboard Preview](./public/dashboard.png)
+![Dashboard Preview](./public/Images/dashboard.png)
 
 ## Features
 
