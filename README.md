@@ -15,13 +15,14 @@ A modern, responsive dashboard for managing user roles and permissions built wit
 ### Role Management
 - Create and customize roles with specific permissions
 - Hierarchical permission structure
-- Pre-configured role templates
+- Pre-configured roles
 - Granular access control settings
 
 ### Modern UI/UX
 - Clean, intuitive interface
 - Responsive design for all devices
 - Smooth animations and transitions
+- Dark and Light Theme
 
 ## Tech Stack
 
